@@ -1,0 +1,37 @@
+p,li,span,a{
+    font-family: 'Roboto', sans-serif;
+}
+
+h1,h2,h3,h4,h5{
+    font-family: 'Oswald', sans-serif;
+}
+
+#dominios > h1{
+    font-size: 3rem;
+}
+
+#dominios > p{
+    font-size: 1rem;
+}
+
+#logo{
+    max-width: 100%;
+}
+
+#congratsMessage{
+    padding-top: 10%;
+}
+
+#divTableServicios{
+    max-height: 400px;
+    overflow: auto;
+}
+
+
+@media screen and (min-width: 330px) and (max-width: 768px){
+   
+    .menu-item {
+        display: contents;
+    }
+
+}

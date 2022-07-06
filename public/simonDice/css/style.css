@@ -1,0 +1,47 @@
+@font-face {
+    font-family: '../fonts/tccc-unitycondensedbold';
+    src: url('../fonts/tccc-unitycondensed-bold2-webfont.woff2') format('woff2'),
+         url('../fonts/tccc-unitycondensed-bold2-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: '../fonts/tccc-unitycondensedmedium';
+    src: url('../fonts/tccc-unitycondensed-medium2-webfont.woff2') format('woff2'),
+         url('../fonts/tccc-unitycondensed-medium2-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+h2 {
+  font-family: '../fonts/tccc-unitycondensedmedium';
+	color: #fff;
+}
+.home-text {
+	text-align: center;
+	margin-top: 6vh;
+	color: #FFF;
+}
+.home-btn {
+    margin-top: 2vh;
+	display:block;
+	width: 100%;
+	max-width: 280px;
+	margin: 20px auto 10px;
+	background-color:#cf0c13;
+	color:#fff;
+	padding: 10px;
+	border-radius: 5px;
+	text-decoration: none;
+	text-align: center;
+}
+.home-img {
+	display: block;
+	margin: 20px auto;
+	width: 100%;
+	max-width: 300px;
+}
+

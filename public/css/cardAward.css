@@ -1,0 +1,179 @@
+
+    .swal2-popup.swal2-modal.swal2-icon-error.swal2-show {
+        height: 22vh;
+        /* background-color: ; */
+    }
+
+    .buttonsTable{
+        color: grey;
+        font-size: 1.3rem;
+    }
+
+    .cardsDetails{
+        box-shadow: -2px -1px 9px -2px rgba(0,0,0,0.77);
+        -webkit-box-shadow: -2px -1px 9px -2px rgba(0,0,0,0.77);
+        -moz-box-shadow: -2px -1px 9px -2px rgba(0,0,0,0.77);
+    }
+
+    @import url(https://fonts.googleapis.com/css?family=Lato:400,700,900);
+    /* 
+    $border-radius-size: 14px;
+    $barbarian: #EC9B3B;
+    $archer: #EE5487;
+    $giant: #F6901A;
+    $goblin: #82BB30;
+    $wizard: #4FACFF; */
+
+    *, *:before, *:after {
+        box-sizing: border-box;
+    }
+
+    body {
+        /* background: linear-gradient(to bottom, rgba(140,122,122,1) 0%, rgba(175,135,124,1) 65%, rgba(175,135,124,1) 100%) fixed; */
+        /* background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/coc-background.jpg') no-repeat center center fixed; */
+        background-size: cover;
+        font: 14px/20px "Lato", Arial, sans-serif;
+        color: #9E9E9E;
+        margin-top: 30px;
+    }
+
+    .slide-container {
+        margin: auto;
+        width: 400px;
+        text-align: center;
+    }
+
+    .wrapper {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+
+
+    .clash-card {
+        background: white;
+        width: 270px;
+        display: inline-block;
+        margin: auto;
+        border-radius: 14px ;
+        /* position: relative; */
+        text-align: center;
+        box-shadow: -1px 15px 30px -12px black;
+        z-index: 9999;
+    }
+
+    .clash-card__image {
+        min-height: 150px;
+        position: relative;
+        height: 200px;
+        width: 270px;
+        margin-bottom: 35px;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+    .clash-card__image--barbarian {
+        /* background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/barbarian-bg.jpg'); */
+        background-image: linear-gradient(to right top, #051937, #002b49, #003e57, #005161, #0b6468);
+    }
+
+
+    .clash-card__image img {
+        width: 270px; 
+        height: 170px;
+        object-fit: contain;
+        position: absolute;
+        bottom: 10px;
+    }
+
+
+
+    .clash-card__level {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    }
+
+    .clash-card__level--barbarian {
+        color: #EC9B3B;
+    }
+
+
+
+    .clash-card__unit-name {
+    font-size: 26px;
+    color: black;
+    font-weight: 900;
+    margin-bottom: 5px;
+    }
+
+    .clash-card__unit-description {
+        padding: 12px;
+        overflow-y: scroll;
+        height: 110px;
+        margin-bottom: 10px;
+    }
+
+    .clash-card__unit-stats--barbarian {
+        background: #002b49;
+    }
+
+    .one-third {
+        border-right: 1px solid #002b49;
+        width: 33%;
+        float: left;
+        padding: 20px 15px;
+    }
+
+
+
+    .clash-card__unit-stats {
+
+    color: white;
+    font-weight: 700;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+
+
+    }
+
+    .stat {
+        position: relative;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .stat-value {
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 8px;
+    }
+
+    .no-border {
+        border-right: none;
+    }
+
+    .clearfix:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+    }
+
+    .slick-prev {
+        left: 100px;
+        z-index: 999;
+    }
+
+    .slick-next {
+        right: 100px;
+        z-index: 999;
+    }

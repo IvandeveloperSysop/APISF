@@ -1,0 +1,87 @@
+.container_foto {
+	padding: 0;
+	overflow: hidden;
+	width: 100%;
+    margin: 5px;
+    /* height: 43vh; */
+    width: 100%;
+}
+
+.container_foto img {
+	width: 100%;
+	top: 0;
+	left: 0;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+    transition: all 1s ease;
+    height: 335px;
+}
+
+.ver_mas {
+    background-color: #FEB66C;
+	position: absolute;
+	width: 100%;
+	height: 35px;
+	bottom: 0;
+	z-index: 1;
+	opacity: 0;
+	transform: translate(0px, 40px);
+	-webkit-transform: translate(0px, 40px);
+	-moz-transform: translate(0px, 40px);
+	-o-transform: translate(0px, 40px);
+	-ms-transform: translate(0px, 40px);
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    display: none;
+}
+
+.ver_mas span {
+	font-size: 40px;
+	color: #fff;
+	position: relative;
+	margin: 0 auto;
+	width: 100%;
+	top: -13px;
+}
+
+
+/*hovers*/
+.container_foto:hover {
+    cursor: pointer;
+    background-color: rgba(57, 62, 93, 0.7);   
+}
+.container_foto:hover img {
+    opacity: .5;
+	transform: scale(1);
+}
+
+.container_foto:hover article {
+	transform: translate(2px, -69px);
+	-webkit-transform: translate(2px, -69px);
+	-moz-transform: translate(2px, -69px);
+	-o-transform: translate(2px, -69px);
+	-ms-transform: translate(2px, -69px);
+}
+
+.container_foto:hover .ver_mas {
+	transform: translate(0px, 0px);
+	-webkit-transform: translate(0px, 0px);
+	-moz-transform: translate(0px, 0px);
+	-o-transform: translate(0px, 0px);
+	-ms-transform: translate(0px, 0px);
+    opacity: 1;
+    display: block;
+}
+
+
+@media (max-width: 920px) {
+	.container_foto {
+		/* width: 66%; */
+	}
+
+}
