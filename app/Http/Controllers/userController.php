@@ -24,7 +24,7 @@ class userController extends Controller
     public $date;
 
     public function __construct(periodsController $periodsController, routeGlobal $routeGlobal, walletController $walletController)
-    { 
+    {
         $this->periodsController = $periodsController;
         $this->walletController = $walletController;
         $this->routeGlobal = $routeGlobal;
@@ -54,24 +54,24 @@ class userController extends Controller
             ->where('password', md5($request->pass))
             ->first();
             $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
-            
+
             if ($user){
                 if($user->status == 18){
-    
+
                     $json = [
                         "user" => $user,
                     ];
-        
+
                     if($date >= $user->tokenExpiration){
-        
+
                         DB::table('users')
                         ->where('id', $user->id)
                         ->update([
                             'tokenExpiration' => $date->add(1, 'month'),
                         ]);
                     }
-        
-        
+
+
                     // llamar a otro controllador para traer el periodo dependiendo de la fecha
                     // $period = $this->periodsController->index($date, $request->promo_id);
                 }else{
@@ -79,13 +79,13 @@ class userController extends Controller
                         "message" => 'userInactive',
                     ];
                 }
-    
+
             }else{
                 $json = [
                     "message" => 'nada',
                 ];
             }
-            
+
             // echo json_encode($json);
             return $json;
         } catch (\Throwable $th) {
@@ -102,19 +102,19 @@ class userController extends Controller
         ->where('providerSocial', $request->providerSocial)
         ->where('idSocial', $request->idSocial)
         ->first();
-		
+
         if ($user){
-            
+
             if($user->status == 18){
 
                 $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
                 // llamar a otro controllador para traer el periodo dependiendo de la fecha
                 $period = $this->periodsController->index($date, $request->promo_id);
-    
-    
+
+
                 if(!$user->imageUrl){
                     $image = "https:".str_replace(array('*', '$', 'questionFa'), array('=', '/', '?'), $request->image);
-        
+
                     DB::table('users')
                     ->where('id', $user->id)
                     ->update([
@@ -126,7 +126,7 @@ class userController extends Controller
                 $user = DB::table('users')
                 ->where('id', $user->id)
                 ->first();
-                
+
                 $json = [
                     "user" => $user,
                 ];
@@ -136,14 +136,13 @@ class userController extends Controller
                 ];
             }
 
-           
 
         }else{
             $json = [
                 "message" => 'nada',
             ];
         }
-        
+
         //echo json_encode($json);
         return $json;
 
@@ -151,7 +150,7 @@ class userController extends Controller
 
     public function register(Request $request) {
 
-    
+
         try {
 
             $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
@@ -168,37 +167,37 @@ class userController extends Controller
 
                 return $json;
             }else{
-                
+
                 $user = DB::table('users')
                 ->where('email', $request->email)
                 ->first();
-    
+
                 if(!$user){
                     $user = DB::table('users')
                     ->where('nickName', $request->nickName)
                     ->first();
                 }
-                
+
                 if (!$user){
-    
+
                     // return 'if';
                     $token = Str::random(30);
                     $validToken = true;
-    
+
                     while (!$validToken) {
                         $user = DB::table('users')
                         ->where('token', $token)
                         ->first();
-    
+
                         if($user){
                             $token = Str::random(30);
                         }else{
                             $validToken = false;
                         }
                     }
-    
+
                     $birthdate = Carbon::parse($request->birthdate, 'UTC');
-                    
+
                     $notifications = DB::table('avisos')
                     ->first();
 
@@ -211,7 +210,7 @@ class userController extends Controller
                     DB::table('users')
                     ->insert([
                         'name' => $request->name ,
-                        'email' => $request->email, 
+                        'email' => $request->email,
                         'password' => md5($request->password),
                         'token' => $token,
                         // 'country' => $request->country,
@@ -232,18 +231,18 @@ class userController extends Controller
                         'created_at' => $this->date,
                         'updated_at' => $this->date,
                     ]);
-                    
+
                     $user = DB::table('users')
                     ->where('email', $request->email)
                     ->first();
 
                     $this->walletController->registerWallet($user->id, $this->date);
-                    
+
                     if($request->img){
-                        
-                        $data = explode( ',', $request->img );                    
+
+                        $data = explode( ',', $request->img );
                         $pathP = 'img/profile/'.'profile-'.$token.'.'.$request->extension;
-                        
+
                         $content = base64_decode($data[1]);
                         $typeFile = Str::substr($data[0],0,10);
                         if($typeFile == 'data:image' ){
@@ -254,14 +253,14 @@ class userController extends Controller
                             // Guardar Imagen normal
                             $content = base64_decode($data[1]);
                             Storage::disk('public')->put( $pathP, $content);
-        
+
                             // Guardar Imagen mas pequeña
                             $resized_image = Image::make($content)->resize(300, 200)->stream($request->extension, 100);
                             Storage::disk('public')->put( $pathResize, $resized_image);
-        
+
                             // Guarda imagen en la carpeta public
                             // Storage::disk('assets')->put( $pathP, $content);
-        
+
                             $routeGlobal = $this->routeGlobal->index();
                             $path = $routeGlobal.$pathP;
                             $pathRe = $routeGlobal.$pathResize;
@@ -282,7 +281,7 @@ class userController extends Controller
                             ];
                         }
                     }
-                    
+
 
                     // return $request->campaign;
                     if($request->campaign){
@@ -295,8 +294,8 @@ class userController extends Controller
                         ->update(['registers' => $campaign->registers + 1]);
                     }
 
-                    
-    
+
+
                     $json = [
                         "user" => $user
                     ];
@@ -327,7 +326,7 @@ class userController extends Controller
 
     public function registerSocial(Request $request) {
 
-    
+
         try {
 
             $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
@@ -346,7 +345,7 @@ class userController extends Controller
                 $user = DB::table('users')
                     ->where('email', $request->email)
                     ->first();
-    
+
                 if(!$user){
                     $user = DB::table('users')
                     ->where('nickName', $request->nickName)
@@ -354,25 +353,25 @@ class userController extends Controller
                 }
 
                 if (!$user){
-    
+
                     $token = Str::random(30);
                     $provider = $request->providerSocial;
                     $validToken = true;
-    
+
                     while (!$validToken) {
                         $user = DB::table('users')
                         ->where('token', $token)
                         ->first();
-    
+
                         if($user){
                             $token = Str::random(30);
                         }else{
                             $validToken = false;
                         }
                     }
-    
+
                     $birthdate = Carbon::parse($request->birthdate, 'UTC');
-                    
+
                     // if($request->providerSocial == 'GOOGLE'){
                     //     $image = "https:".str_replace(array('*', ' '), array('=', '/'), $request->image);
                     // }else{
@@ -385,7 +384,7 @@ class userController extends Controller
                     DB::table('users')
                     ->insert([
                         [   'name'=> $request->name ,
-                            'email' => $request->email, 
+                            'email' => $request->email,
                             'token' => $token,
                             // 'country' => $request->country,
                             // 'cp' => $request->cp,
@@ -411,16 +410,16 @@ class userController extends Controller
                             'validFriends' => 1,
                         ],
                     ]);
-                    
+
                     $user = DB::table('users')
                     ->where('email', $request->email)
                     ->first();
-        
+
                     $period = DB::table('periods')
                     ->where("inicial_date",'<=',$this->date->format('Y-m-d'))
                     ->where("final_date",'>=',$this->date->format('Y-m-d'))
                     ->first();
-    
+
                     if (!$period){
                         $period = DB::table('periods')
                         ->orderBy('id', 'desc')
@@ -428,10 +427,10 @@ class userController extends Controller
                     }
 
                     $this->walletController->registerWallet($user->id, $this->date);
-                    
+
                     DB::table('periods_score')
                     ->insert([
-                        [   
+                        [
                             'user_id'=> $user->id,
                             'period_id'=> $period->id,
                             'pending_score' => 0,
@@ -440,7 +439,7 @@ class userController extends Controller
                             'updated_at' => $this->date,
                         ],
                     ]);
-    
+
                     $json = [
                         "user" => $user
                     ];
@@ -457,28 +456,28 @@ class userController extends Controller
                         "message" => $message,
                         "result" => $result
                     ];
-                    
+
                 }
             }
 
-            
+
         } catch (\Throwable $th) {
             //throw $th;
             $json = [
                 "message" => $th,
             ];
         }
-        
+
         //echo json_encode($json);
 
         return $json;
-        
+
 
     }
 
     public function updateProfile(Request $request) {
 
-    
+
         try {
             $user = DB::table('users')
                 ->where('email', $request->email)
@@ -486,54 +485,54 @@ class userController extends Controller
                 ->first();
 
            if (!$user){
-                
+
                 $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
                 $birthdate = Carbon::parse($request->birthdate, 'UTC');
                 // echo json_encode($birthdate);
-                
+
                 // return;
                 if($request->img){
 
-                    
+
 					$user = DB::table('users')
 					->where('token', $request->token)
 					->first();
-					
-                    $data = explode( ',', $request->img );   
+
+                    $data = explode( ',', $request->img );
                     $typeFile = Str::substr($data[0],0,10);
                     if($typeFile == 'data:image' ){
-                        
+
                         $pathP = 'img/profile/'.'profile-'.$request->token.'.'.$request->extension;
                         $pathResize = 'img/profileResize/'.'profile-'.$request->token.'.'.$request->extension;
-                        
-    
+
+
                         if (Storage::disk('public')->exists($user->imageResize)){
                             Storage::disk('public')->delete($user->imageResize);
                         }
-    
+
                         if (Storage::disk('public')->exists($user->image)){
                             Storage::disk('public')->delete($user->image);
                         }
-                        
+
                         $content = base64_decode($data[1]);
                         Storage::disk('public')->put( $pathP, $content);
-    
-    
+
+
                         $resized_image = Image::make($content)->resize(300, 200)->stream($request->extension, 100);
-    
+
                         Storage::disk('public')->put( $pathResize, $resized_image);
-    
+
                         // Guarda imagen en la carpeta public
                         // Storage::disk('assets')->put( $pathP, $content);
-    
+
                         $routeGlobal = $this->routeGlobal->index();
                         $path = $routeGlobal.$pathP;
                         $pathRe = $routeGlobal.$pathResize;
-    
+
                         DB::table('users')
                         ->where('token', $request->token)
                         ->update(['name'=> $request->name,
-                            // 'email' => $request->email, 
+                            // 'email' => $request->email,
                             'country' => $request->country,
                             'cp' => $request->cp,
                             'cellPhone' => $request->cellPhone,
@@ -560,7 +559,7 @@ class userController extends Controller
                     ->where('token', $request->token)
                     ->update(
                         [   'name'=> $request->name ,
-                            'email' => $request->email, 
+                            'email' => $request->email,
                             'country' => $request->country,
                             'cp' => $request->cp,
                             'cellPhone' => $request->cellPhone,
@@ -574,7 +573,7 @@ class userController extends Controller
                 $user = DB::table('users')
                 ->where('token', $request->token)
                 ->first();
-    
+
 
                 $json = [
                     "user" => 1,
@@ -629,19 +628,19 @@ class userController extends Controller
             ];
 
             //echo json_encode($json);
-    
+
             return $json;
-            
+
         } catch (\Throwable $th) {
             //throw $th;
             $json = [
                 "message" => $th,
             ];
             //echo json_encode($json);
-    
+
             return $json;
         }
-        
+
     }
 
     public function referUser(Request $request){
@@ -678,8 +677,8 @@ class userController extends Controller
                 ->leftJoin('users', 'refers.user_id', '=', 'users.id')
                 ->select(
                     'status_catalog.name as statusName',
-                    'status_catalog.id as statusId', 
-                    'users.nickName as nickName', 
+                    'status_catalog.id as statusId',
+                    'users.nickName as nickName',
                     'users.imageUrl as image',
                     'users.id as user_id'
                 )
@@ -689,20 +688,20 @@ class userController extends Controller
 
                 $arrUsers = [];
                 foreach ($refersFriends as $key => $refersFriend) {
-        
+
                     $arrUser = [
                         "image" => $refersFriend->image,
                         'nickName' => $refersFriend->nickName,
-                        'user_id' => $refersFriend->user_id, 
+                        'user_id' => $refersFriend->user_id,
                         'status' => $refersFriend->statusName,
 						'statusId' => $refersFriend->statusId
                     ];
-        
+
                     array_push($arrUsers, $arrUser);
                     // $arrTickets.push($arrTicket);
-                    
+
                 }
-        
+
                 $json = [
                     "refers" => $arrUsers,
                     'message' => 'ok'
@@ -714,7 +713,7 @@ class userController extends Controller
                 ];
             }
             //echo json_encode($json);
-    
+
             return $json;
         } catch (\Throwable $th) {
             //throw $th;
@@ -771,31 +770,31 @@ class userController extends Controller
                 'updated_at' => $date,
                 'promo_id' => $request->promo_id,
             ]);
-    
+
             $refer = DB::table('refers')
             ->where('user_id', $request->user)
             ->orderBy('id', 'DESC')
             ->first();
-    
+
             $period = DB::table('periods')
             ->where("inicial_date",'<=',$this->date->format('Y-m-d'))
             ->where("final_date",'>=',$this->date->format('Y-m-d'))
             ->first();
-    
+
             // $scoreRefere = DB::table('periods_score')
             // ->where('user_id', $refer->id_refer)
             // ->where('period_id', $period->id)
             // ->first();
-    
+
             // if($scoreRefere){
-    
+
             //     $pointsScoreRefere = $scoreRefere->score + 1;
-    
+
             //     DB::table('periods_score')
             //     ->where('id', $scoreRefere->id)
             //     ->update(['score' => $pointsScoreRefere , 'updated_at' => $this->date]);
             // }else{
-                
+
             //     DB::table('periods_score')
             //     ->insert([
             //         [   'user_id'=> $refer->id_refer,
@@ -805,13 +804,13 @@ class userController extends Controller
             //             'updated_at' => $date
             //         ],
             //     ]);
-    
+
             //     $scoreRefere = DB::table('periods_score')
             //     ->where('user_id', $refer->id_refer)
             //     ->where('period_id', $period->id)
             //     ->first();
             // }
-    
+
             DB::table('extra_points')
             ->insert([
                 'user_id' => $refer->id_refer,
@@ -821,7 +820,7 @@ class userController extends Controller
                 'points' => 1,
                 'refer_or_minigames_id' => $refer->id,
             ]);
-    
+
             // DB::table('refers')
             // ->where('user_id', $request->user)
             // ->where('status',3)
@@ -844,7 +843,7 @@ class userController extends Controller
         try {
             //code...
             $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
-    
+
             // llamar a otro controllador para traer el periodo dependiendo de la fecha
             $period = $this->periodsController->index($date,$request->promo_id);
 
@@ -854,23 +853,23 @@ class userController extends Controller
 
             if($user){
                 if($user->tokenExpiration <= $date){
-                    
+
                     $json = [
                         'message' => 'tokenExpired'
                     ];
 
                 }else{
-                    
+
                     $score = DB::table('periods_score')
                     ->leftJoin('periods', 'periods_score.period_id', '=', 'periods.id')
                     ->where('user_id', $user->id)
                     ->where('period_id', $period->id)
                     ->first();
-        
+
                     if(!$score){
                         DB::table('periods_score')
                         ->insert([
-                            [   
+                            [
                                 'user_id'=> $user->id ,
                                 'period_id'=> $period->id,
                                 'score' => 0,
@@ -879,36 +878,36 @@ class userController extends Controller
                                 'updated_at' => $date,
                             ],
                         ]);
-        
+
                         $score = DB::table('periods_score')
                         ->where('user_id', $user->id)
                         ->where('period_id', $period->id)
                         ->first();
                     }
-            
+
                     $user = DB::table('users')
                     ->join('periods_score', 'users.id', '=', 'periods_score.user_id')
                     ->select(
-                        'users.id', 
-                        'users.nickName as nickName', 
-                        'users.name as userName' , 
-                        'users.state_id as stateUser', 
-                        'users.imageUrl as image' , 
-                        'periods_score.score as periodScore', 
+                        'users.id',
+                        'users.nickName as nickName',
+                        'users.name as userName' ,
+                        'users.state_id as stateUser',
+                        'users.imageUrl as image' ,
+                        'periods_score.score as periodScore',
                         'users.notifications',
                         'users.validFriends',
                     )
                     ->where('token',$request->token)
                     ->where('period_id',$period->id)
                     ->first();
-                    
-        
+
+
                     $refers = DB::table('refers')
                     ->select(DB::raw('COUNT(id) as refers'))
                     ->where('id_refer',$user->id)
                     // ->where('promo_id',$request->promo_id)
                     ->first();
-                    
+
                     if($refers){
                         $referScore = $refers->refers;
                     }else{
@@ -926,10 +925,10 @@ class userController extends Controller
                     }else{
                         $totalOrders = 0;
                     }
-        
-        
+
+
                     $base64 = $user->image;
-        
+
                     $states = DB::table('states')
                     ->where('promo_id', $request->promo_id)
                     ->get();
@@ -941,9 +940,9 @@ class userController extends Controller
                     ->get();
 
                     $balance = $this->walletController->getUserBalance($request->token);
-            
+
                     $routeGlobal = $this->routeGlobal->index();
-            
+
                     $json = [
                         "userId" => $user->id,
                         "image" => $base64,
@@ -983,7 +982,7 @@ class userController extends Controller
 
     public function topList(Request $request) {
         try {
-            
+
             $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
             $period = $this->periodsController->index($date, $request->promo_id);
 
@@ -1004,17 +1003,17 @@ class userController extends Controller
             ->limit(20)
             ->get();
             // dd($period->id);
-                
+
             $arrUsers = [];
             foreach ($users as $key => $user) {
-                
-    
+
+
                 $arrUser = [
                     "image" => $user->userImage,
                     'nickName' => $user->nickName,
-                    'user_id' => $user->user_id, 
+                    'user_id' => $user->user_id,
                 ];
-    
+
                 array_push($arrUsers, $arrUser);
 
             }
@@ -1023,7 +1022,7 @@ class userController extends Controller
             if($date > $period->final_date){
                 $valperiod_id = null;
             }
-    
+
             $json = [
                 "users" => $arrUsers,
                 'periodId' => $period->id,
@@ -1032,14 +1031,14 @@ class userController extends Controller
                 "final_date" => date('d/m/Y', strtotime($period->final_date)),
                 "valperiod_id" => $valperiod_id,
             ];
-    
+
             return $json;
         } catch (\Throwable $th) {
             //throw $th;
             $json = [
                 "err" => $th,
             ];
-    
+
             // echo json_encode($json);
             return $json;
         }
@@ -1058,12 +1057,12 @@ class userController extends Controller
                   ->where('id', $token_user->user_id)
                   ->update(['status' => 1, 'updated_at' => $dateNow]
                 );
-    
+
                 DB::table('token_user')
                 ->where('id', $token_user->id)
                 ->delete();
-    
-            
+
+
                 return redirect()->route('congrats-userActivate');
             }else{
                 return redirect()->route('user-nonActivate',['message'=>'invalidToken','name' => $user->name,
@@ -1090,15 +1089,15 @@ class userController extends Controller
             ->where('id',$id)
             ->first();
             // dd($user);
-    
+
             if($user){
                 $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
-    
+
                 $token_user = DB::table('token_users')
                 ->where('user_id',$user->id)
                 ->where('token',$token)
                 ->first();
-    
+
                 if($token_user){
                     if($date > $token_user->expiration_at){
                         // dd('fecha pasada');
@@ -1133,7 +1132,7 @@ class userController extends Controller
     }
 
     public function changePassword(Request $request){
-        
+
         $token = $request->token;
         $password = md5($request->password);
         $token_user = DB::table('token_users')
@@ -1163,7 +1162,7 @@ class userController extends Controller
 
         // return redirect()->route('success-Password');
     }
-    
+
     public function successPass(){
         return view('user.successPass');
 
@@ -1173,7 +1172,7 @@ class userController extends Controller
         try {
             //code...
             $date = Carbon::now(new \DateTimeZone('AMERICA/Monterrey'));
-    
+
             $user = DB::table('users')
             ->where('token',$request->token)
             ->first();
@@ -1246,5 +1245,5 @@ class userController extends Controller
         ];
 
     }
-    
+
 }

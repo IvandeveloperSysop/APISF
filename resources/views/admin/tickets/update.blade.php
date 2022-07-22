@@ -154,7 +154,7 @@
                         </div>
 
                         @php
-                            $showNonPresentation = false
+                            $showNonPresentation = true
                         @endphp
 
                         @if ($showNonPresentation)

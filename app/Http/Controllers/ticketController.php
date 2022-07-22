@@ -808,6 +808,7 @@ class ticketController extends Controller
 
                 }else {
 
+                    //Aca se asignana los puntos de la trivia si tiene mas de x tickets
                     $pendingPoints = $this->recalculatePeriodScore($ticket->ps_id,2);
 
 

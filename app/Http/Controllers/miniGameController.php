@@ -150,7 +150,7 @@ class miniGameController extends Controller
             // return [$ticket];
 
             // Si el Administrador aprobo el ticket y tiene un minigame ya jugado se trae los puntos y los suma, solo si el ticket es mayor a los puntos que acordemos como minimo
-            if ($ticket->statusTicket == 1 && $ticket->statusMinigame == 23 && $ticket->points > 20){
+            if ($ticket->statusTicket == 1 && $ticket->statusMinigame == 23 && $ticket->points >= 20){
 
                 DB::table('extra_points')->insert([
                     'user_id' => $ticket->user_id,
